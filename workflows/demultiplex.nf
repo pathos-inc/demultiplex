@@ -167,8 +167,9 @@ workflow DEMULTIPLEX {
             fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
 
             // Format ch_input like so:
+            // TODO JDW update
             // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
-            ch_input = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}
+            ch_input = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(path(b/a[0]), a[1])}
 
             FQTK_DEMULTIPLEX ( ch_input )
             ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)

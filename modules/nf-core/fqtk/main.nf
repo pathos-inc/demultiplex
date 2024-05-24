@@ -1,4 +1,6 @@
 process FQTK {
+    debug true
+
     tag "$meta.id"
     label 'process_high'
 
@@ -10,6 +12,7 @@ process FQTK {
     input:
     tuple val(meta), path(sample_sheet), val(fastq_readstructure_pairs)
     // fastq_readstructure_pairs example:
+    // TODO JDW update
     // [[<fastq name: string>, <read structure: string>, <path to fastqs: path>], [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]]
 
     output:
@@ -27,7 +30,7 @@ process FQTK {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     // Join the absolute path from UNTAR.out.untar to the fastq file names
-    fastqs = fastq_readstructure_pairs.collect{path(it[2])/it[0]}.join(" ")
+    fastqs = fastq_readstructure_pairs.collect{it[0]}.join(" ")
     // Create a list of read structures, Example: 8B 8B 150T
     read_structures = fastq_readstructure_pairs.collect{it[1]}.join(" ")
 
